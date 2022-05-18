@@ -1,0 +1,30 @@
+path_db: '../visr_db/cnn'
+model: 'CNN'
+dataset: 'CVRTDataModule'
+# trainer
+gpus: 1
+max_epochs: 200
+num_workers: 4
+checkpoint: ''
+finetune: 0
+freeze_pretrained: 0
+# flush_logs_every_n_steps: 100
+log_every_n_steps: 100
+ckpt_period: 1
+# model
+# learning_rate: 0.001
+#arch
+backbone: resnet50
+lr: 0.001
+wd: 0.001
+n_tasks: 103
+mlp_dim: 128
+mlp_hidden_dim: 2048
+task_embedding: 0
+# data
+data_dir: '/media/data_cifs_lrs/projects/prj_visreason/cvrt_data/'
+task: '0'
+batch_size: 64
+train_transform: null
+val_transform: null
+n_samples: 10000 # 5000, 1000
