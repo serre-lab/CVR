@@ -3,21 +3,14 @@ import sys
 # import yaml
 import argparse
 
-# from typing import Union
-# from warnings import warn
-
 import numpy as np
 import pandas as pd
-# from scipy import stats
 
 import pytorch_lightning as pl
 import torch
-# import torch.nn.functional as F
-# from torch import nn
 import torchvision
 
 from pytorch_lightning.loggers.tensorboard import TensorBoardLogger
-# from pytorch_lightning.callbacks import Callback
 
 import modules
 import datasets
@@ -33,6 +26,8 @@ def cli_main():
     parser.add_argument("-c", "--config", default=None, help="where to load YAML configuration", metavar="FILE")
 
     parser.add_argument('--seed', type=int, default=None, help='random seed')
+    parser.add_argument('--task', default='a', help='the task to test.')
+    parser.add_argument('--test_set', type=str, default='', help='the test set split. If "gen" is chosen the model will be tested on the generalization test set.')
     parser.add_argument('--load_checkpoint', action='store_true', help='resume training from checkpoint training')
     
 
@@ -58,7 +53,7 @@ def cli_main():
     # initializing the dataset and model
     datamodule = dataset_type(**args.__dict__)
 
-    
+
     ###################################################################################################
     # checkpoint loading and setup
 
@@ -67,9 +62,7 @@ def cli_main():
         ckpt = list(filter(lambda x: '.ckpt' in x, os.listdir(args.exp_dir)))[0]
         ckpt = os.path.join(args.exp_dir, ckpt)
         
-        # latest_ckpt = find_best_epoch(args.exp_dir, 0)
         print('Loading checkpoint', ckpt)
-        # args.__dict__.update({'resume_from_checkpoint': latest_ckpt})
         model = model_type.load_from_checkpoint(ckpt)
     else:
         model = model_type(**args.__dict__)
@@ -81,8 +74,7 @@ def cli_main():
     if run_test:
 
         logger = TensorBoardLogger(args.exp_dir, default_hp_metric=False)
-        # model_checkpoint = pl.callbacks.ModelCheckpoint(dirpath=args.exp_dir, save_top_k=3, mode='min', monitor='metrics/'+args.track_metric, period=args.ckpt_period)     
-        
+
         trainer = pl.Trainer.from_argparse_args(args)
 
         trainer.test(model=model, datamodule=datamodule)
@@ -113,10 +105,13 @@ def cli_main():
             '0_seed': args.seed,
             '0_dataset': args.dataset,
             '0_checkpoint': args.checkpoint,
+            '0_test_set': args.test_set,
             '0_finetune': args.finetune,
             '0_freeze_pretrained': args.freeze_pretrained,
             '1_task': args.task,
             '1_n_samples': args.n_samples,
+            # '2_val_acc': best_val_acc,
+            # '2_best_epoch': best_epoch,
             '3_max_epochs': args.max_epochs,
             '3_backbone': args.backbone,
             '3_batch_size': args.batch_size,

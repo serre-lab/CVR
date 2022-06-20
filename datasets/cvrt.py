@@ -21,6 +21,7 @@ class CVRTDataModule(DataModuleBase):
         train_transform,
         test_transform,
         n_samples,
+        test_set,
         num_workers,
         batch_size,
         # image_size,
@@ -49,7 +50,10 @@ class CVRTDataModule(DataModuleBase):
 
         self.train_set = CVRT(data_dir, task, split='train', n_samples=n_samples, image_size=128, transform=transform)
         self.val_set = CVRT(data_dir, task, split='val', n_samples=-1, image_size=128, transform=transform)
-        self.test_set = CVRT(data_dir, task, split='test', n_samples=-1, image_size=128, transform=transform)
+        if test_set == 'gen':
+            self.test_set = CVRT(data_dir, task, split='test_gen', n_samples=-1, image_size=128, transform=transform)
+        else:
+            self.test_set = CVRT(data_dir, task, split='test', n_samples=-1, image_size=128, transform=transform)
 
         # self.setup()
 
@@ -94,6 +98,7 @@ class CVRTDataModule(DataModuleBase):
         parser.add_argument('--batch_size', type=int, default=None)
         parser.add_argument('--task', type=str, default='0')
         parser.add_argument('--n_samples', type=int, default=-1)
+        parser.add_argument('--test_set', type=str, default='')
 
         return parser
 
@@ -221,6 +226,10 @@ class CVRT(Dataset):
         self.base_folder = base_folder
         if task =='a':
             self.tasks = [v for _,v in TASKS.items()]
+        elif task=='elem':
+            self.tasks = [TASKS[i] for i in range(9)]
+        elif task=='comp':
+            self.tasks = [TASKS[i] for i in range(9, len(TASKS))]
         else:
             self.tasks = [TASKS[int(t)] for t in task.split('-')]
         
@@ -233,6 +242,9 @@ class CVRT(Dataset):
             self.n_samples = 500
             # self.n_samples = 5
         elif split == 'test':
+            self.n_samples = 1000
+            # self.n_samples = 10
+        elif split == 'test_gen':
             self.n_samples = 1000
             # self.n_samples = 10
 

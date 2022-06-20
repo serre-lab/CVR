@@ -56,7 +56,11 @@ def find_best_epoch(save_dir, version):
 def process_results(results, task):
     global_avg = {k: r.mean() for k,r in results.items()}
     if task == 'a':
-        tasks = range(103)
+        tasks = list(range(103))
+    elif task == 'elem':
+        tasks = list(range(9))
+    elif task == 'comp':
+        tasks = list(range(9, 103))
     else:
         tasks = task.split('-')
     per_task = {}

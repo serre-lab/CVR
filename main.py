@@ -24,6 +24,12 @@ import datasets
 
 from utils import parse_args, save_config, find_best_epoch, process_results
 
+## TODO work on finetuning code
+
+# def load_transfer_weights(model, model_type, checkpoint):
+#     model_temp = model_type.load_from_checkpoint(checkpoint)
+#     model.load_finetune_weights(model_temp)
+#     del model_temp
 
 class MetricsCallback(Callback):
     """PyTorch Lightning metric callback."""
@@ -69,8 +75,8 @@ def cli_main():
     parser.add_argument('--path_db', type=str, default='../dbs', help='experiment database path')
     parser.add_argument('--seed', type=int, default=None, help='random seed')
     parser.add_argument('--resume_training', action='store_true', help='resume training from checkpoint training')
-    parser.add_argument('--model', type=str, default='', help='self supervised training method')
-    parser.add_argument('--dataset', type=str, default='', help='dataset to use for training')
+    parser.add_argument('--model', type=str, default='CNN_VAE', help='self supervised training method')
+    parser.add_argument('--dataset', type=str, default='SVHNSupDataModule', help='dataset to use for training')
     parser.add_argument('--ckpt_period', type=int, default=3, help='save checkpoints every')
     parser.add_argument('--checkpoint', type=str, default='', help='model checkpoint for resuming training or finetuning')
     parser.add_argument('--finetune', type=int, default=0, help='0 = no finetuning')
@@ -117,10 +123,15 @@ def cli_main():
         fit_kwargs['ckpt_path'] = ckpt
 
     else:
-        if args.checkpoint != '' and args.finetune == 1:
+        if (args.checkpoint != '' and args.finetune == 1) or (args.checkpoint != '' and '.ckpt' not in args.checkpoint and '.tar' not in args.checkpoint):
             ckpt = args.checkpoint
             if '.ckpt' not in ckpt:
-                ckpt = list(filter(lambda x: '.ckpt' in x, os.listdir(ckpt)))[0]
+                ckpt = list(filter(lambda x: '.ckpt' in x, os.listdir(ckpt)))
+                ckpts = [c for c in ckpt if 'epoch' in c]
+                if len(ckpts)>0:
+                    ckpt = ckpts[0]
+                else:
+                    ckpt = ckpt[0]
                 ckpt = os.path.join(args.checkpoint, ckpt)
 
             model.load_finetune_weights(ckpt)
@@ -147,7 +158,7 @@ def cli_main():
     model_checkpoint = pl.callbacks.ModelCheckpoint(dirpath=args.exp_dir, save_top_k=1, mode='max', monitor='metrics/val_acc', every_n_epochs=args.ckpt_period, save_last=True) 
     callbacks = [model_checkpoint]
     if args.early_stopping!=0:
-        early_stopping = pl.callbacks.EarlyStopping(monitor='metrics/val_acc', mode='max', patience=args.es_patience, stopping_threshold=0.99) #0.99
+        early_stopping = pl.callbacks.EarlyStopping(monitor='metrics/val_acc', mode='max', patience=args.es_patience, stopping_threshold=0.99, strict=False) #0.99
         callbacks.append(early_stopping)
     callbacks.append(TQDMProgressBar(refresh_rate=args.refresh_rate))
     metrics_callback = MetricsCallback()
@@ -172,8 +183,8 @@ def cli_main():
     metrics = metrics_callback.get_all()
 
 
-    best_val_acc = np.nanmax(metrics['metrics/val_acc'])
-    best_epoch = (np.nanargmax(metrics['metrics/val_acc'])+1) * args.ckpt_period
+    best_val_acc = np.nanmax(metrics['metrics/val_acc'] + [0])
+    best_epoch = (np.nanargmax(metrics['metrics/val_acc'] + [0])+1) * args.ckpt_period
 
     # saving results
     logger.log_hyperparams(best_model.hparams, metrics={'hp/'+k : v for k, v in global_avg.items()})

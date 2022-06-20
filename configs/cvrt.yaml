@@ -28,3 +28,4 @@ batch_size: 64
 train_transform: null
 val_transform: null
 n_samples: 10000 # 5000, 1000
+test_set: ''

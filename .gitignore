@@ -13,6 +13,9 @@ __pycache__/
 */__pycache__/
 **/__pycache__/
 
+plots/
+dbs/
+
 *.py[cod]
 *$py.class
 

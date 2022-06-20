@@ -92,6 +92,19 @@ class ConvNet(nn.Module):
 
         return self.net(x)
 
+class SymbInNet(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super().__init__()
+
+        self.net = nn.Sequential(
+            nn.Linear(input_dim, output_dim),
+            nn.ReLU(inplace=True),
+            FeedForwardResidual(output_dim, output_dim)
+        )
+
+    def forward(self, x):
+
+        return self.net(x)
 
 # scattering transform
 
@@ -137,7 +150,10 @@ class SCL(nn.Module):
             task_emb_size=0,
             ):
         super().__init__()
-        self.vision = ConvNet(image_size, conv_channels, conv_output_dim)
+        if len(conv_channels)>0:
+            self.vision = ConvNet(image_size, conv_channels, conv_output_dim)
+        else:
+            self.vision = SymbInNet(image_size, conv_output_dim)
 
         self.task_emb_size = task_emb_size
         self.attr_heads = attr_heads
@@ -151,18 +167,27 @@ class SCL(nn.Module):
 
     def forward(self, sets, task_emb=None):
         # b, m, n, c, h, w = sets.shape
-        b, s, c, h, w = sets.shape
-        images = sets.view(-1, c, h, w)
+        if len(sets.size())>3:
+            b, s, c, h, w = sets.shape
+            images = sets.view(-1, c, h, w)
+        else:
+            b, s, c = sets.shape
+            images = sets.view(-1, c)
+            if self.task_emb_size>0:
+                task_emb_ = expand_dim(task_emb, dim=2, k=s).reshape([-1, task_emb.shape[1]])
+                images = torch.cat([images, task_emb_], dim=1) 
+            
+
         features = self.vision(images)
         # print(features.shape)
         attrs = self.attr_net(features)
         # print(attrs.shape)
         
         if self.task_emb_size>0:
-            task_emb = expand_dim(task_emb, dim=2, k=s).reshape([-1, task_emb.shape[1]])            
+            task_emb_ = expand_dim(task_emb, dim=2, k=s).reshape([-1, task_emb.shape[1]])            
             # attrs = torch.cat([attrs, task_emb], 1)
 
-            attrs = self.ff_residual(attrs, task_emb)
+            attrs = self.ff_residual(attrs, task_emb_)
         else:
             attrs = self.ff_residual(attrs)
 
@@ -187,3 +212,50 @@ class SCL(nn.Module):
 
         logits = self.to_logit(rels).flatten(1)
         return logits
+
+# m = SCL(task_emb_size=9)
+
+# answers   = torch.randn(2, 4, 3, 128, 128)
+# task_emb   = torch.randn(2, 9)
+# labels    = torch.tensor([2])
+# o = m(answers, task_emb)
+
+# num_ftrs = 1024
+# mlp_hidden_dim = 1024
+# task_embedding = 64
+
+# m = SCL(
+#     image_size=num_ftrs+task_embedding,
+#     set_size=5,
+#     conv_channels=[],
+#     conv_output_dim=mlp_hidden_dim,
+#     attr_heads=128,
+#     attr_net_hidden_dims=[256],
+#     rel_heads=mlp_hidden_dim,
+#     rel_net_hidden_dims=[64,23, 5],
+#     task_emb_size=task_embedding,
+# )        
+
+# answers   = torch.randn(2, 4, 1024)
+# task_emb   = torch.randn(2, 64)
+# labels    = torch.tensor([2])
+# import time
+# t = time.time()
+# o = m(answers, task_emb)
+# print(time.time() - t)
+
+# # wrapper for easier training
+
+# class SCLTrainingWrapper(nn.Module):
+#     def __init__(self, scl):
+#         super().__init__()
+#         self.scl = scl
+
+#     def forward(self, questions, answers):
+#         #         import pdb; pdb.set_trace()
+#         answers = answers.unsqueeze(2)
+#         questions = expand_dim(questions, dim=1, k=4)
+
+#         permutations = torch.cat((questions, answers), dim=2)
+
+#         return self.scl(permutations)

@@ -107,7 +107,6 @@ def cli_main():
 
     else:
         
-
         os.makedirs(args.exp_dir, exist_ok=True)
         os.makedirs(args.path_db, exist_ok=True)
         save_config(args.__dict__, os.path.join(args.exp_dir, 'config.yaml'))
@@ -129,14 +128,6 @@ def cli_main():
     trainer = pl.Trainer.from_argparse_args(args, logger=logger, callbacks=callbacks) #, find_unused_parameters=False
     
     trainer.fit(model, datamodule)
-
-    # testing
-    # best_ckpt = model_checkpoint.best_model_path if model_checkpoint.best_model_path!="" else model_checkpoint.last_model_path
-    
-    # best_model = model if model_checkpoint.best_model_path == "" else model_type.load_from_checkpoint(checkpoint_path=model_checkpoint.best_model_path)
-    
-    # trainer.test(model=best_model, datamodule=datamodule)
-
 
     df = pd.DataFrame()
     output_dict = {

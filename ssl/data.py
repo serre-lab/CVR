@@ -8,112 +8,7 @@ from torch.utils.data.dataloader import DataLoader
 import torchvision
 from torchvision import transforms as tvt
 
-from datasets.base_datamodules import DataModuleBase
-from datasets import transforms_ssl
-
-# from datasets import transforms as all_transforms
-
 from PIL import Image
-
-
-class CVRTSSLDataModule(DataModuleBase):
-
-    def __init__(
-        self,
-        data_dir,
-        task,
-        train_transform,
-        test_transform,
-        n_samples,
-        num_workers,
-        batch_size,
-        # image_size,
-        **kwargs,
-    ):
-
-        super(CVRTSSLDataModule, self).__init__(   num_workers,
-                                                batch_size,
-        )
-
-        # if train_transform in vars(all_transforms):
-        #     self.train_transform = vars(all_transforms)[train_transform]()
-        # else:
-        #     self.train_transform = self._default_transforms()
-        
-            
-        # if test_transform in vars(all_transforms):
-        #     self.test_transform = vars(all_transforms)[train_transform]()
-        # else:
-        #     self.test_transform = self._default_transforms()
-        
-        # self.train_transform = self._default_transforms()        
-        # self.test_transform = self._default_transforms()
-        
-        transform = self._default_transforms()
-
-        self.train_set = CVRT(data_dir, task, split='train', n_samples=n_samples, image_size=128, transform=transform)
-        self.val_set = CVRT(data_dir, task, split='val', n_samples=-1, image_size=128, transform=transform)
-        self.test_set = CVRT(data_dir, task, split='test', n_samples=-1, image_size=128, transform=transform)
-
-        # self.setup()
-
-    def get_train_labels(self):
-        return self.train_set.targets
-
-    def _default_transforms(self):
-        
-        # normalize = tvt.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        normalize = tvt.Normalize(mean=(0.9, 0.9, 0.9), std=(0.1, 0.1, 0.1))
-
-        # follow BYOL's augmentation recipe: https://arxiv.org/abs/2006.07733
-        augmentation1 = [
-            tvt.RandomResizedCrop(128, scale=(0.8, 1.)),
-            tvt.RandomApply([
-                tvt.ColorJitter(0, 0, 0, 0.5)  # not strengthened
-            ], p=0.8),
-            tvt.RandomGrayscale(p=0.2),
-            tvt.RandomApply([transforms_ssl.GaussianBlur([.1, 2.])], p=1.0),
-            tvt.RandomHorizontalFlip(),
-            tvt.RandomVerticalFlip(),
-            transforms_ssl.RotationTransform([-90, 0, 90, 180]),
-            tvt.ToTensor(),
-            normalize
-        ]
-
-        augmentation2 = [
-            tvt.RandomResizedCrop(128, scale=(0.8, 1.)),
-            tvt.RandomApply([
-                tvt.ColorJitter(0, 0, 0, 0.5)  # not strengthened
-            ], p=0.8),
-            tvt.RandomGrayscale(p=0.2),
-            tvt.RandomApply([transforms_ssl.GaussianBlur([.1, 2.])], p=1.0),
-            tvt.RandomHorizontalFlip(),
-            tvt.RandomVerticalFlip(),
-            transforms_ssl.RotationTransform([-90, 0, 90, 180]),
-            tvt.ToTensor(),
-            normalize
-        ]
-        
-        return transforms_ssl.TwoCropsTransform(tvt.Compose(augmentation1), 
-                                                tvt.Compose(augmentation2))
-
-
-
-    @staticmethod
-    def add_dataset_specific_args(parent_parser):
-
-        parser = argparse.ArgumentParser(parents=[parent_parser], add_help=False)
-
-        parser.add_argument('--data_dir', type=str, default='')
-        parser.add_argument('--train_transform', type=str, default='')
-        parser.add_argument('--test_transform', type=str, default='')
-        parser.add_argument('--num_workers', type=int, default=0)
-        parser.add_argument('--batch_size', type=int, default=None)
-        parser.add_argument('--task', type=str, default='0')
-        parser.add_argument('--n_samples', type=int, default=-1)
-
-        return parser
-
 
 
 
@@ -129,9 +24,9 @@ TASKS={
     6: "task_count",
     7: "task_inside",
     8: "task_contact",
+    ### compositions
     9: "task_sym_rot",
     10: "task_sym_mir",
-    ### compositions
     11: "task_pos_pos_1",
     12: "task_pos_pos_2",
     13: "task_pos_count_2",
@@ -150,7 +45,7 @@ TASKS={
     26: "task_pos_inside_2",
     27: "task_pos_inside_4",
     28: "task_rot_rot_1",
-    29: "task_flip_flip_1", # task_rot_rot_2
+    29: "task_flip_flip_1",
     30: "task_rot_rot_3",
     31: "task_pos_pos_3",
     32: "task_pos_count_4",
@@ -255,14 +150,14 @@ class CVRT(Dataset):
         self.totensor = tvt.ToTensor()
 
     def __len__(self):
-        return len(self.tasks) * self.n_samples * 4
+        return len(self.tasks) * self.n_samples
 
     def __getitem__(self, idx):
-        task_idx = idx // (self.n_samples*4)
-        sample_idx = idx % (self.n_samples*4)
+
+        task_idx = idx // (self.n_samples)
+        sample_idx = idx % (self.n_samples)
         
-        i = sample_idx % 4
-        sample_idx = sample_idx // 4
+        i = 0
 
         sample_path = os.path.join(self.base_folder, self.tasks[task_idx], self.split, '{:05d}.png'.format(sample_idx))
         sample = Image.open(sample_path)

@@ -1,2 +1,2 @@
-from modules.cnn import CNN, SCN, WREN
+from modules.cnn import CNN, SCN, WREN, SCNHead
 from modules.ssl import Moco

@@ -212,3 +212,10 @@ class WReN(nn.Module):
         # meta_pred = torch.sum(output[:,:,0:12], dim=1)
         # return pred, meta_pred
         
+
+# m = WReN(task_emb_size=9)
+# answers   = torch.randn(2, 4, 3, 128, 128)
+# task_emb   = torch.randn(2, 9)
+# labels    = torch.tensor([2])
+# o = m(answers, task_emb)
+# o.shape
