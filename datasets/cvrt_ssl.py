@@ -3,15 +3,13 @@ import argparse
 
 import torch
 
-from torch.utils.data import Dataset, random_split
+from torch.utils.data import Dataset
 from torch.utils.data.dataloader import DataLoader
 import torchvision
 from torchvision import transforms as tvt
 
 from datasets.base_datamodules import DataModuleBase
 from datasets import transforms_ssl
-
-# from datasets import transforms as all_transforms
 
 from PIL import Image
 
@@ -27,27 +25,12 @@ class CVRTSSLDataModule(DataModuleBase):
         n_samples,
         num_workers,
         batch_size,
-        # image_size,
         **kwargs,
     ):
 
         super(CVRTSSLDataModule, self).__init__(   num_workers,
                                                 batch_size,
         )
-
-        # if train_transform in vars(all_transforms):
-        #     self.train_transform = vars(all_transforms)[train_transform]()
-        # else:
-        #     self.train_transform = self._default_transforms()
-        
-            
-        # if test_transform in vars(all_transforms):
-        #     self.test_transform = vars(all_transforms)[train_transform]()
-        # else:
-        #     self.test_transform = self._default_transforms()
-        
-        # self.train_transform = self._default_transforms()        
-        # self.test_transform = self._default_transforms()
         
         transform = self._default_transforms()
 
@@ -129,9 +112,9 @@ TASKS={
     6: "task_count",
     7: "task_inside",
     8: "task_contact",
+    ### compositions
     9: "task_sym_rot",
     10: "task_sym_mir",
-    ### compositions
     11: "task_pos_pos_1",
     12: "task_pos_pos_2",
     13: "task_pos_count_2",
@@ -150,7 +133,7 @@ TASKS={
     26: "task_pos_inside_2",
     27: "task_pos_inside_4",
     28: "task_rot_rot_1",
-    29: "task_flip_flip_1", # task_rot_rot_2
+    29: "task_flip_flip_1",
     30: "task_rot_rot_3",
     31: "task_pos_pos_3",
     32: "task_pos_count_4",
@@ -203,7 +186,6 @@ TASKS={
     79: "task_inside_contact",
     80: "task_contact_count_1",
     81: "task_contact_count_2",
-    ##### new
     82: "task_size_color_1",
     83: "task_size_color_2",
     84: "task_color_sym_1",
@@ -226,7 +208,6 @@ TASKS={
     101: "task_flip_contact_1",
     102: "task_flip_contact_2",    
 }
-
 
 class CVRT(Dataset):
     

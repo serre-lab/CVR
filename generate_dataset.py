@@ -11,7 +11,7 @@ from PIL import Image
 
 from data_generation.tasks import TASKS
 from data_generation.generalization_tasks import TASKS as TASKS_GEN
-from data_generation.utils import save_image, generate_dataset, save_image_human_exp, render_ooo
+from data_generation.utils import render_ooo
 
 
 TASKS_IDX={
@@ -185,25 +185,17 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
 
-    # parser.add_argument('--seed', type=int, default=0, help='seed for dataset generation')
-    # parser.add_argument('--data_dir', type=str, default='../cvrt_data/', help='directory to output dataset')
-    # parser.add_argument('--task_idx', default=0, help='index of the dataset')
-    # parser.add_argument('--train_size', type=int, default=0, help='the number of training set samples')
-    # parser.add_argument('--val_size', type=int, default=0, help='the number of validation set samples')
-    # parser.add_argument('--test_size', type=int, default=0, help='the number of test set samples')
-    # parser.add_argument('--test_gen_size', type=int, default=1000, help='the number of generalization test set samples')
-    # parser.add_argument('--image_size', type=int, default=128, help='image height and width in pixels')
-
     parser.add_argument('--seed', type=int, default=0, help='seed for dataset generation')
-    parser.add_argument('--data_dir', type=str, default='../CVR_dataset', help='directory to output dataset')
-    parser.add_argument('--task_idx', default='a', help='the task to generate')
-    parser.add_argument('--train_size', type=int, default=4, help='the number of training set samples')
-    parser.add_argument('--val_size', type=int, default=4, help='the number of validation set samples')
-    parser.add_argument('--test_size', type=int, default=4, help='the number of test set samples')
-    parser.add_argument('--test_gen_size', type=int, default=4, help='the number of generalization test set samples')
-    parser.add_argument('--image_size', type=int, default=224, help='image height and width in pixels')
+    parser.add_argument('--data_dir', type=str, default='../cvrt_data/', help='directory to output dataset')
+    parser.add_argument('--task_idx', default='a', help='index of the dataset')
+    parser.add_argument('--train_size', type=int, default=10000, help='the number of training set samples')
+    parser.add_argument('--val_size', type=int, default=500, help='the number of validation set samples')
+    parser.add_argument('--test_size', type=int, default=1000, help='the number of test set samples')
+    parser.add_argument('--test_gen_size', type=int, default=1000, help='the number of generalization test set samples')
+    parser.add_argument('--image_size', type=int, default=128, help='image height and width in pixels')
 
-    # --data_dir ../CVR_dataset --task_idx a --train_size 4 --val_size 4 --test_size 4 --test_gen_size 4 --image_size 128
+    ## for debugging 
+    ## python generate_dataset.py --data_dir ../CVR_dataset --task_idx a --train_size 4 --val_size 4 --test_size 4 --test_gen_size 4 --image_size 128
 
     args = parser.parse_args()
 

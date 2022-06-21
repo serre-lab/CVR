@@ -2,26 +2,16 @@
 import os
 import math
 import random
-# import pickle
 import argparse
-# from warnings import warn
 
 import numpy as np
 
 from pytorch_lightning import LightningDataModule
-from torch.utils.data import Dataset, DataLoader, random_split
-
-# from torchvision import transforms as transform_lib
-
-# from torch.nn.utils.rnn import pad_packed_sequence, pad_sequence, pack_padded_sequence
-
+from torch.utils.data import Dataset, DataLoader
 
 
 
 class DataModuleBase(LightningDataModule):
-    # labeled_indices: ...
-    # unlabeled_indices: ...
-    # val_indices: ...
 
     def __init__(
         self,  
@@ -30,11 +20,9 @@ class DataModuleBase(LightningDataModule):
     ):
         super().__init__()
         self.batch_size = batch_size
-        # self.num_val = num_val
-        # self._n_classes = n_classes
 
-        self.train_transform = None  # TODO, need implement this in your custom datasets
-        self.test_transform = None  # TODO, need implement this in your custom datasets
+        self.train_transform = None 
+        self.test_transform = None
 
         self.train_set = None
         self.val_set = None

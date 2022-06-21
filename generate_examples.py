@@ -11,7 +11,7 @@ from PIL import Image
 
 from data_generation.tasks import TASKS
 from data_generation.generalization_tasks import TASKS as TASKS_GEN
-from data_generation.utils import save_image, generate_dataset, save_image_human_exp
+from data_generation.utils import save_image
 
 
 TASKS_IDX={
@@ -130,6 +130,7 @@ if __name__ == '__main__':
     # parser.add_argument('--seed', type=int, default=0, help='seed for dataset generation')
     parser.add_argument('--data_dir', type=str, default='examples/', help='directory to output dataset')
     parser.add_argument('--task_idx', type=int, default=0, help='index of the dataset')
+    parser.add_argument('--split', default='', help='choose "gen" to generate generalization set examples')
     parser.add_argument('--n_samples', type=int, default=0, help='number of examples to generate')
 
     args = parser.parse_args()
@@ -146,7 +147,11 @@ if __name__ == '__main__':
 
     n_samples = args.n_samples
     
-    tn, tfn, desc = TASKS[task_idx]
+    if args.split == 'gen':
+        tn, tfn, desc = TASKS_GEN[task_idx]
+    else:
+        tn, tfn, desc = TASKS[task_idx]
+    
     images = np.concatenate([tfn() for i in range(n_samples)], 0)
     save_image(images, base_path, tn)
 

@@ -8,7 +8,6 @@ def join_dfs(dbs):
     df = pd.DataFrame()
     dfs = []
     for db in dbs:
-        # df = df.append(pd.read_csv(os.path.join(args.db_path, db), index_col=0), ignore_index=True)
         dfs.append(pd.read_csv(db, index_col=0))
     df = pd.concat(dfs, ignore_index=True)
 
@@ -24,13 +23,6 @@ def main():
     dbs = os.listdir(args.db_path)
 
     dbs = [os.path.join(args.db_path, db) for db in dbs]
-
-    # df = pd.DataFrame()
-    # dfs = []
-    # for db in dbs:
-    #     # df = df.append(pd.read_csv(os.path.join(args.db_path, db), index_col=0), ignore_index=True)
-    #     dfs.append(pd.read_csv(os.path.join(args.db_path, db), index_col=0))
-    # df = pd.concat(dfs, ignore_index=True)
 
     df = join_dfs(dbs)
     df.to_csv(args.db_save)

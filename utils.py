@@ -41,13 +41,11 @@ def find_best_epoch(save_dir, version):
     :param ckpt_folder: dir where the checpoints are being saved.
     :return: Integer of the highest epoch reached by the checkpoints.
     """
-    # ckpt_folder = os.path.join(save_dir, 'default', 'version_{}'.format(version), 'checkpoints')
     ckpt_folder = save_dir
 
     ckpt_files = os.listdir(ckpt_folder)  # list of strings
     ckpt_files = list(filter(lambda x: '.ckpt' in x, ckpt_files))
     epochs = [int(s.split('-')[0].split('=')[1]) for s in ckpt_files]
-    # epochs = [int(filename[6:-5]) for filename in ckpt_files]  # 'epoch={int}.ckpt' filename format
     best_file = ckpt_files[epochs.index(max(epochs))]
     
     return os.path.join(ckpt_folder, best_file) 

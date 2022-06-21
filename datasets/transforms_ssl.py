@@ -1,8 +1,3 @@
-# Copyright (c) Facebook, Inc. and its affiliates.
-# All rights reserved.
-
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
 
 from PIL import Image, ImageFilter, ImageOps
 import math
@@ -51,5 +46,3 @@ class RotationTransform:
     def __call__(self, x):
         angle = random.choice(self.angles)
         return tf.rotate(x, angle)
-
-# rotation_transform = MyRotationTransform(angles=[-30, -15, 0, 15, 30])

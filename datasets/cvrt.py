@@ -1,14 +1,11 @@
 import os
 import argparse
-from torch.utils.data import Dataset, random_split
+from torch.utils.data import Dataset
 from torch.utils.data.dataloader import DataLoader
 import torchvision
 from torchvision import transforms as tvt
 
 from datasets.base_datamodules import DataModuleBase
-
-
-# from datasets import transforms as all_transforms
 
 from PIL import Image
 
@@ -32,20 +29,6 @@ class CVRTDataModule(DataModuleBase):
                                                 batch_size,
         )
 
-        # if train_transform in vars(all_transforms):
-        #     self.train_transform = vars(all_transforms)[train_transform]()
-        # else:
-        #     self.train_transform = self._default_transforms()
-        
-            
-        # if test_transform in vars(all_transforms):
-        #     self.test_transform = vars(all_transforms)[train_transform]()
-        # else:
-        #     self.test_transform = self._default_transforms()
-        
-        # self.train_transform = self._default_transforms()        
-        # self.test_transform = self._default_transforms()
-        
         transform = self._default_transforms()
 
         self.train_set = CVRT(data_dir, task, split='train', n_samples=n_samples, image_size=128, transform=transform)
@@ -66,26 +49,6 @@ class CVRTDataModule(DataModuleBase):
         ])
         return transforms
     
-    # def get_trainset_loader(self, batch_size=None, num_workers=None, transform=None, num_samples=0):
-    #     batch_size = self.batch_size if batch_size is None else batch_size
-    #     num_workers = self.num_workers if num_workers is None else num_workers
-    #     transform = self.train_transform if transform is None else tvt.ToTensor()
-        
-    #     # train_set = torchvision.datasets.CIFAR10(root=self.data_dir, train=True, download=True, transform=transform)
-    #     train_set = CVRT(base_folder, task, test=False, n_samples=-1, image_size=128, transform=None)
-
-    #     if num_samples > 0:
-    #         train_set, _ = random_split(train_set, [num_samples, len(train_set) - num_samples])
-            
-    #     return DataLoader(
-    #         train_set,
-    #         batch_size=batch_size,
-    #         shuffle=False,
-    #         num_workers=num_workers,
-    #         pin_memory=True,
-    #         drop_last=False,
-    #     )
-
     @staticmethod
     def add_dataset_specific_args(parent_parser):
 
@@ -117,9 +80,9 @@ TASKS={
     6: "task_count",
     7: "task_inside",
     8: "task_contact",
+    ### compositions
     9: "task_sym_rot",
     10: "task_sym_mir",
-    ### compositions
     11: "task_pos_pos_1",
     12: "task_pos_pos_2",
     13: "task_pos_count_2",
@@ -138,7 +101,7 @@ TASKS={
     26: "task_pos_inside_2",
     27: "task_pos_inside_4",
     28: "task_rot_rot_1",
-    29: "task_flip_flip_1", # task_rot_rot_2
+    29: "task_flip_flip_1",
     30: "task_rot_rot_3",
     31: "task_pos_pos_3",
     32: "task_pos_count_4",
@@ -191,7 +154,6 @@ TASKS={
     79: "task_inside_contact",
     80: "task_contact_count_1",
     81: "task_contact_count_2",
-    ##### new
     82: "task_size_color_1",
     83: "task_size_color_2",
     84: "task_color_sym_1",
@@ -240,13 +202,10 @@ class CVRT(Dataset):
             self.n_samples = 10000
         elif split == 'val':
             self.n_samples = 500
-            # self.n_samples = 5
         elif split == 'test':
             self.n_samples = 1000
-            # self.n_samples = 10
         elif split == 'test_gen':
             self.n_samples = 1000
-            # self.n_samples = 10
 
         self.image_size = image_size
 
@@ -267,10 +226,6 @@ class CVRT(Dataset):
         im_size = sample.shape[1]
         pad = im_size - self.image_size
         
-        # sample = sample.reshape([im_size, 4, im_size])
-        # sample = sample[pad//2:-pad//2, pad//2:-pad//2]
-        # sample = sample.permute([1,0,2])
-        
         sample = sample.reshape([3, im_size, 4, im_size]).permute([2,0,1,3])[:, :, pad//2:-pad//2, pad//2:-pad//2]
         
         if self.transform is not None:
@@ -278,25 +233,3 @@ class CVRT(Dataset):
         
         return sample, task_idx
 
-    ## show the four images in a 2x2 image to the model
-    # def __getitem__(self, idx):
-    #     task_idx = idx // self.n_samples
-    #     sample_idx = idx % self.n_samples
-        
-    #     sample_path = os.path.join(self.base_folder, self.tasks[task_idx], '{:05d}.bmp'.format(sample_idx))
-    #     sample = Image.open(sample_path, '1')
-    #     im_size = sample.shape[0]
-    #     pad = im_size - self.image_size
-        
-    #     # sample = sample.reshape([im_size, im_size, 4])
-    #     # sample = sample[pad//2:-pad//2, pad//2:-pad//2]
-    #     # sample = sample.permute([2,0,1])
-        
-    #     sample = sample.reshape([im_size, 4, im_size])[pad//2:-pad//2, pad//2:-pad//2].permute([1,0,2])
-        
-    #     sample = self.preprocess(sample)
-        
-    #     if self.transform is not None:
-    #         sample = self.transform(sample)
-        
-    #     return sample

@@ -5,8 +5,6 @@ from torch import nn
 import torch.nn.functional as F
 
 
-# helper functions
-
 def default(val, default_val):
     return val if val is not None else default_val
 
@@ -16,9 +14,6 @@ def expand_dim(t, dim, k):
     expand_shape = [-1] * len(t.shape)
     expand_shape[dim] = k
     return t.expand(*expand_shape)
-
-
-# simple MLP with ReLU activation
 
 class MLP(nn.Module):
     def __init__(self, *dims, activation=None):
@@ -40,10 +35,6 @@ class MLP(nn.Module):
     def forward(self, x):
         return self.net(x)
 
-
-# the feedforward residual block mentioned in the paper
-# used after extracting the visual features, as well as post-extraction of attribute information
-
 class FeedForwardResidual(nn.Module):
     def __init__(self, dim_in, dim, mult=4):
         super().__init__()
@@ -59,10 +50,6 @@ class FeedForwardResidual(nn.Module):
         
         input_ = torch.cat([x, task_emb], 1) if task_emb is not None else x
         return x + self.net(input_)
-
-
-# convolutional net
-# todo, make customizable and add Evonorm for batch independent normalization
 
 class ConvNet(nn.Module):
     def __init__(self, image_size, chans, output_dim):
@@ -106,8 +93,6 @@ class SymbInNet(nn.Module):
 
         return self.net(x)
 
-# scattering transform
-
 class ScatteringTransform(nn.Module):
     def __init__(self, dims, heads, activation=None):
         super().__init__()
@@ -132,9 +117,6 @@ class ScatteringTransform(nn.Module):
         x = self.mlp(x)
 
         return x.reshape(shape)
-
-
-# main scattering compositional learner class
 
 class SCL(nn.Module):
     def __init__(
@@ -179,20 +161,16 @@ class SCL(nn.Module):
             
 
         features = self.vision(images)
-        # print(features.shape)
         attrs = self.attr_net(features)
-        # print(attrs.shape)
         
         if self.task_emb_size>0:
             task_emb_ = expand_dim(task_emb, dim=2, k=s).reshape([-1, task_emb.shape[1]])            
-            # attrs = torch.cat([attrs, task_emb], 1)
 
             attrs = self.ff_residual(attrs, task_emb_)
         else:
             attrs = self.ff_residual(attrs)
 
         perms = torch.stack([torch.randperm(s, device=attrs.device) for _ in range(b)], 0)
-        # y = perms.argmax(1)
         perms = perms + torch.arange(b, device=attrs.device)[:,None]*4
         perms = perms.flatten()
 
@@ -212,50 +190,3 @@ class SCL(nn.Module):
 
         logits = self.to_logit(rels).flatten(1)
         return logits
-
-# m = SCL(task_emb_size=9)
-
-# answers   = torch.randn(2, 4, 3, 128, 128)
-# task_emb   = torch.randn(2, 9)
-# labels    = torch.tensor([2])
-# o = m(answers, task_emb)
-
-# num_ftrs = 1024
-# mlp_hidden_dim = 1024
-# task_embedding = 64
-
-# m = SCL(
-#     image_size=num_ftrs+task_embedding,
-#     set_size=5,
-#     conv_channels=[],
-#     conv_output_dim=mlp_hidden_dim,
-#     attr_heads=128,
-#     attr_net_hidden_dims=[256],
-#     rel_heads=mlp_hidden_dim,
-#     rel_net_hidden_dims=[64,23, 5],
-#     task_emb_size=task_embedding,
-# )        
-
-# answers   = torch.randn(2, 4, 1024)
-# task_emb   = torch.randn(2, 64)
-# labels    = torch.tensor([2])
-# import time
-# t = time.time()
-# o = m(answers, task_emb)
-# print(time.time() - t)
-
-# # wrapper for easier training
-
-# class SCLTrainingWrapper(nn.Module):
-#     def __init__(self, scl):
-#         super().__init__()
-#         self.scl = scl
-
-#     def forward(self, questions, answers):
-#         #         import pdb; pdb.set_trace()
-#         answers = answers.unsqueeze(2)
-#         questions = expand_dim(questions, dim=1, k=4)
-
-#         permutations = torch.cat((questions, answers), dim=2)
-
-#         return self.scl(permutations)

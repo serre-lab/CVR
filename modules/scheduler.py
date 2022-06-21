@@ -43,9 +43,6 @@ class LinearWarmupCosineAnnealingLR(_LRScheduler):
                 UserWarning,
             )
 
-        # print('last epoch, warmup epochs, max epochs', self.last_epoch, self.warmup_epochs, self.max_epochs)
-
-
         if self.last_epoch == 0:
             return [self.warmup_start_lr] * len(self.base_lrs)
         if self.last_epoch < self.warmup_epochs:

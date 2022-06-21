@@ -1,13 +1,10 @@
 import os
 import numpy as np
-import matplotlib.pyplot as plt
 
 from PIL import Image
 
 import cv2
 
-import matplotlib
-matplotlib.use('Agg')
 
 def cat_lists(lists):
     o = []
@@ -19,7 +16,7 @@ def cat_lists(lists):
 def hsv_to_rgb(h, s, v):
     if s == 0.0:
         return v, v, v
-    i = int(h*6.0) # XXX assume int() truncates!
+    i = int(h*6.0) # assume int() truncates!
     f = (h*6.0) - i
     p = v*(1.0 - s)
     q = v*(1.0 - s*f)
@@ -67,22 +64,14 @@ def sample_position_inside_1(s1, s2, scale):
     res = np.logical_and(res1, res2)
 
     samples = samples[res,0]
-    # if len(samples)==0:
-    #     print('')
-        
+
     return samples
 
 def sample_position_inside_many(s1, shapes, scales):
     c1 = s1.get_contour()
     c2s = [s2.get_contour() for s2 in shapes]
-
-    # c2s = [c2 * scale for c2,scale in zip(c2s, scales)]
-    
-    # c2s = c2s * np.array(scales)[:,None,None]
-    # bbs_2 = c2s.max(1) - c2s.min(1) # [n_shapes, 2]
     
     bbs_2 = np.array([c2.max(0) - c2.min(0) for c2 in c2s]) * np.array(scales)[:,None]
-    # bbs_2 = bbs_2 * np.array(scales)[:,None,None]
     
     n_shapes = len(shapes)
 
@@ -185,7 +174,7 @@ def sample_positions(size, n_sample_min=1, max_tries=10, n_samples_over=100):
     valid = (np.abs(xy[:,:,None,:] - xy[:,None,:,:]) - (size[:,:,None,None]+size[:,None,:,None])/2 > 0).any(3).reshape([n_samples_over, n_objects**2])[:,triu_idx].all(1)
     if valid.any():
         xy_ = xy[valid][:n_sample_min]
-    # while  not valid.any() and i<max_tries:
+
     while  len(xy_) < n_sample_min and i<max_tries:
         xy = np.random.rand(n_samples_over, n_objects, 2) * (1-size[:,:,None]) + size[:,:,None]/2
         valid = (np.abs(xy[:,:,None,:] - xy[:,None,:,:]) - (size[:,:,None,None]+size[:,None,:,None])/2 > 0).any(3).reshape([n_samples_over, n_objects**2])[:,triu_idx].all(1)
@@ -220,7 +209,7 @@ def sample_positions_bb(size, n_sample_min=1, max_tries=10, n_samples_over=100):
     valid = (np.abs(xy[:,:,None,:] - xy[:,None,:,:]) - (size[:,:,None,:]+size[:,None,:,:])/2 > 0).any(3).reshape([n_samples_over, n_objects**2])[:,triu_idx].all(1)
     if valid.any():
         xy_ = xy[valid][:n_sample_min]
-    # while  not valid.any() and i<max_tries:
+
     while  len(xy_) < n_sample_min and i<max_tries:
         xy = np.random.rand(n_samples_over, n_objects, 2) * (1-size) + size/2
         valid = (np.abs(xy[:,:,None,:] - xy[:,None,:,:]) - (size[:,:,None,:]+size[:,None,:,:])/2 > 0).any(3).reshape([n_samples_over, n_objects**2])[:,triu_idx].all(1)
@@ -244,7 +233,6 @@ def sample_random_colors(n_samples):
     h = np.random.rand(n_samples)
     s = np.random.rand(n_samples) * 0.5 + 0.5
     v = np.random.rand(n_samples) * 1
-    # v = np.random.rand(n_samples) * 0.3 + 0.7
 
     color = np.stack([h,s,v],1)
     return color
@@ -284,8 +272,7 @@ def sample_contact(s1, s2, scale, direction=0):
         p2 = np.argmax(c2[:,1]) 
 
     xy2 = (c2.max(0) + c2.min(0))/2 - c2[p2] + c1[p1]
-    xy1 = np.zeros(2)
-
+    # xy1 = np.zeros(2)
     
     return xy2
 
@@ -335,14 +322,6 @@ def sample_contact_many(shapes, sizes, a=None):
 
 def flip_diag_scene(xys, shapes):
 
-    # for s_ in shapes:
-    #     for s in s_:
-    #         s.flip_diag()
-
-    # for i, xy_ in enumerate(xys):
-    #     for j, xy in enumerate(xy_):
-    #         xys[i][j] = xy[::-1]
-
     for s in shapes:
         s.flip_diag()
 
@@ -351,22 +330,12 @@ def flip_diag_scene(xys, shapes):
 
     return xys, shapes
 
-# def render_cv(xy, size, shapes, color=None, axis='y', image_size=128):
 def render_cv(xy, size, shapes, color=None, image_size=128):
-    # # image_size = 128
-
-    # if color is None:
-    #     color = np.ones([len(shapes), 3])
-    #     color[:,0] = np.random.rand()               # h
-    #     color[:,1] = np.random.rand() * 0.5 + 0.5   # s
-    #     color[:,2] = 0.7                            # v
-
         
     color = [hsv_to_rgb(c[0], c[1], c[2]) for c in color]
 
     image = (np.ones([image_size,image_size, 3]) * 255).astype(np.uint8)
 
-    # contours = []
     for i in range(len(shapes)):
         size_ = size[i]
         s_ = shapes[i]
@@ -383,10 +352,6 @@ def render_cv(xy, size, shapes, color=None, image_size=128):
 
         c = c + (xy_[None,:] * image_size).astype(int)
 
-        # if axis=='x':
-        #     c = c[:,::-1]
-
-        # contours.append(c)
         col_ = (np.array(color[i])*255).tolist()
         cv2.drawContours(image, [c], -1, col_, 1)
         
@@ -437,139 +402,3 @@ def save_image(images, base_path, task_name):
     img = Image.fromarray(images).convert('RGB')
     img.save(save_path)
 
-
-def generate_dataset(task_name, task_fn, data_path='/media/data_cifs_lrs/projects/prj_visreason/cvrt_data/', seed=0, train_size=10000, val_size=500,  test_size=1000, test_gen_size=1000):
-    # data_path = '/home/aimen/projects/cvrt_git/algs_images/'
-    # data_path = '/media/data_cifs_lrs/projects/prj_visreason/cvrt_data/'
-
-    task_path = os.path.join(data_path, task_name)
-    
-    n_train_samples_0 = 0
-    n_train_samples_1 = train_size
-
-    n_val_samples_0 = 0
-    n_val_samples_1 = val_size
-
-    n_test_samples_0 = 0
-    n_test_samples_1 = test_size
-
-
-    os.makedirs(task_path, exist_ok=True)
-    os.makedirs(os.path.join(task_path,'train'), exist_ok=True)
-    os.makedirs(os.path.join(task_path,'val'), exist_ok=True)
-    os.makedirs(os.path.join(task_path,'test'), exist_ok=True)
-    os.makedirs(os.path.join(task_path,'test_gen'), exist_ok=True)
-
-    np.random.seed(seed)
-    split = 'train'
-    for i in range(n_train_samples_0, n_train_samples_1):
-        # images, metadata = task()
-        images = task_fn()
-        # save_path = os.path.join(task_path, split, '{:05d}.bmp'.format(i))
-        # img = Image.fromarray(images).convert('1')
-
-        save_path = os.path.join(task_path, split, '{:05d}.png'.format(i))
-        img = Image.fromarray(images).convert('RGB')
-        img.save(save_path)
-
-    np.random.seed(seed+1)
-    split = 'val'
-    for i in range(n_val_samples_0, n_val_samples_1):
-        # images, metadata = task()
-        images = task_fn()
-        # save_path = os.path.join(task_path, split, '{:05d}.bmp'.format(i))
-        # img = Image.fromarray(images).convert('1')
-
-        save_path = os.path.join(task_path, split, '{:05d}.png'.format(i))
-        img = Image.fromarray(images).convert('RGB')
-        img.save(save_path)
-
-    np.random.seed(seed+2)
-    split = 'test'
-    for i in range(n_test_samples_0, n_test_samples_1):
-        # images, metadata = task()
-        images = task_fn()
-        # save_path = os.path.join(task_path, split, '{:05d}.bmp'.format(i))
-        # img = Image.fromarray(images).convert('1')
-
-        save_path = os.path.join(task_path, split, '{:05d}.png'.format(i))
-        img = Image.fromarray(images).convert('RGB')
-        img.save(save_path)
-
-    np.random.seed(seed+2)
-    split = 'test_gen'
-    for i in range(n_test_samples_0, n_test_samples_1):
-        # images, metadata = task()
-        images = task_fn()
-        # save_path = os.path.join(task_path, split, '{:05d}.bmp'.format(i))
-        # img = Image.fromarray(images).convert('1')
-
-        save_path = os.path.join(task_path, split, '{:05d}.png'.format(i))
-        img = Image.fromarray(images).convert('RGB')
-        img.save(save_path)
-
-
-def experiment_details():
-    
-    # curriculum condition
-
-    n_groups = 1
-
-    n_subjects_group = 20
-
-    n_elementary_tasks = 3
-    
-    # combinations of 2
-    n_combinations = n_elementary_tasks ** 2
-
-    # n_training_tasks_group = n_elementary_tasks + n_combinations
-    
-    n_training_tasks_group = 68
-
-    n_evaluation_tasks_group = 0
-
-    n_trials_per_task = 20
-
-    time_per_trial = 10
-
-    base_hourly_fee = 8.5
-    full_hourly_fee = 8.5 * 1.33 # prolific fees
-
-
-    ####
-
-    n_tasks = (n_training_tasks_group + n_evaluation_tasks_group) * n_groups
-
-    n_tasks_group = n_training_tasks_group + n_evaluation_tasks_group * n_groups
-    n_trials_subjects = n_trials_per_task * n_tasks_group
-    n_trials_group = n_trials_subjects * n_subjects_group
-    n_trials = n_trials_group * n_groups
-    n_subjects = n_subjects_group * n_groups
-
-    time_subject = (n_trials_per_task* (time_per_trial+2) + 5) * n_tasks_group / 3600 
-
-    fee_subject = time_subject * full_hourly_fee 
-    
-    fee_total = fee_subject * n_subjects
-    
-    out_dict = [
-        ["n_combinations", n_combinations],
-        ["n_training_tasks_group", n_training_tasks_group],
-        ["n_tasks_all", n_tasks],
-        ["n_tasks_group", n_tasks_group],
-        ["n_trials_subjects", n_trials_subjects],
-        ["n_trials_group", n_trials_group],
-        ["n_trials", n_trials],
-        ["n_subjects", n_subjects],
-        ["time_subject", time_subject],
-        ["fee_subject", fee_subject],    
-        ["fee_total", fee_total],    
-    ]
-
-    out = '{}: {}\n'* (len(out_dict))
-    out_strs = []
-    for s in out_dict:
-        out_strs += s
-    out = out.format(*out_strs)
-    print(out)
-    

@@ -101,29 +101,8 @@ class WReN(nn.Module):
         self.rn = relation_module()
         self.mlp = mlp_module()
         self.proj = panels_to_embeddings(task_emb_size)
-        # self.optimizer = optim.Adam(self.parameters(), lr=args.lr, betas=(args.beta1, args.beta2), eps=args.epsilon)
-        # self.meta_beta = args.meta_beta 
-        
-        self.task_emb_size = task_emb_size
-        # self.use_tag = args.tag
-        
-        # self.use_cuda = args.cuda
-        # self.tags = self.tag_panels(args.batch_size)
 
-    # def tag_panels(self, batch_size):
-    #     tags = []
-    #     for idx in range(0, 16):
-    #         tag = np.zeros([1, 9], dtype=float)
-    #         if idx < 8:
-    #             tag[:, idx] = 1.0
-    #         else:
-    #             tag[:, 8] = 1.0
-    #         tag = torch.tensor(tag, dtype=torch.float).expand(batch_size, -1).unsqueeze(1)
-    #         # if self.use_cuda:
-    #         #     tag = tag.cuda()
-    #         tags.append(tag)
-    #     tags = torch.cat(tags, dim=1)
-    #     return tags
+        self.task_emb_size = task_emb_size
 
     def group_panel_embeddings(self, embeddings):
         embeddings = embeddings.view(-1, 16, 256)
@@ -153,14 +132,12 @@ class WReN(nn.Module):
         b, s, c = choice_embeddings.shape
         
         perms = torch.stack([torch.randperm(s, device=embeddings.device) for _ in range(b)], 0)
-        # y = perms.argmax(1)
+
         perms = perms + torch.arange(b, device=embeddings.device)[:,None]*4
         perms = perms.flatten()
 
         context_embeddings = embeddings[perms].view(-1, 4, 256)
 
-        # context_embeddings = embeddings[:,:8,:]
-        # choice_embeddings = embeddings[:,8:,:]
         context_embeddings_pairs = torch.cat((context_embeddings.unsqueeze(1).expand(-1, s, -1, -1), context_embeddings.unsqueeze(2).expand(-1, -1, s, -1)), dim=3).view(-1, 16, 512)
         
         context_embeddings = context_embeddings.unsqueeze(1).expand(-1, s, -1, -1)
@@ -179,43 +156,18 @@ class WReN(nn.Module):
     def compute_loss(self, output, target, meta_target):
         pred, meta_pred = output[0], output[1]
         target_loss = F.cross_entropy(pred, target)
-        # meta_pred = torch.chunk(meta_pred, chunks=12, dim=1)
-        # meta_target = torch.chunk(meta_target, chunks=12, dim=1)
-        # meta_target_loss = 0.
-        # for idx in range(0, 12):
-        #     meta_target_loss += F.binary_cross_entropy(F.sigmoid(meta_pred[idx]), meta_target[idx])
-        # loss = target_loss + self.meta_beta*meta_target_loss / 12.
-        
+
         loss = target_loss
         return loss
 
     def forward(self, x, task_emb=None):
-        # panel_features = self.conv(x.view(-1, 1, 80, 80))
         panel_features = self.conv(x.view(-1, 3, 128, 128))
-        # print(panel_embeddings.size())
-        # if self.use_tag:
-        #     panel_features = torch.cat((panel_features, self.tags), dim=2)
         if self.task_emb_size>0:
             panel_features = torch.cat((panel_features, expand_dim(task_emb, dim=1, k=4)), dim=2)
 
         panel_embeddings = self.proj(panel_features)
-        # panel_embeddings_pairs = self.group_panel_embeddings(panel_embeddings)
-        # self.group_panel_embeddings(panel_embeddings)
         panel_embeddings_pairs = self.group_panel_embeddings_batch(panel_embeddings)
-        # print(panel_embeddings_pairs.size())
         panel_embedding_features = self.rn(panel_embeddings_pairs.view(-1, 512))
-        # print(panel_embedding_features.size())
         sum_features = self.rn_sum_features(panel_embedding_features)
         output = self.mlp(sum_features.view(-1, 256))
         return output
-        # pred = output[:,:,12]
-        # meta_pred = torch.sum(output[:,:,0:12], dim=1)
-        # return pred, meta_pred
-        
-
-# m = WReN(task_emb_size=9)
-# answers   = torch.randn(2, 4, 3, 128, 128)
-# task_emb   = torch.randn(2, 9)
-# labels    = torch.tensor([2])
-# o = m(answers, task_emb)
-# o.shape

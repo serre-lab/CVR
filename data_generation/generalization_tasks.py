@@ -9348,28 +9348,3 @@ TASKS=[
     ["task_flip_contact_1", task_flip_contact_1, "Each image contains 3 objects among which 2 have the same shape and 2 are in contact. The objects with similar shapes are in contact and randomly flipped in all images."],
     ["task_flip_contact_2", task_flip_contact_2, "In each image, similarly shaped objects are in contact. All objects are randomly flipped."],
 ]
-
-
-
-# if __name__ == '__main__':
-    
-#     seed = 0
-
-#     base_path = '../cvrt_images_gen/'
-#     os.makedirs(base_path, exist_ok=True)
-
-#     n_samples = 1
-    
-#     for tn, tfn in TASKS:
-#         np.random.seed(seed)
-#         # images = np.concatenate([tfn() for i in range(n_samples)], 0)
-#         images = np.concatenate([tfn() for i in range(n_samples)], 0)
-#         ims = np.split(images, 4, axis=1)
-#         ims[-1][:2,:,0] = 255
-#         ims[-1][:,:2,0] = 255
-#         ims[-1][-2:,:,0] = 255
-#         ims[-1][:,-2:,0] = 255
-#         ims = np.concatenate([np.concatenate([ims[0], ims[1]], 0), np.concatenate([ims[2], ims[3]], 0)], 1)
-#         save_image(ims, base_path, tn)
-    
-    

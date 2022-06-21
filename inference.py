@@ -110,8 +110,6 @@ def cli_main():
             '0_freeze_pretrained': args.freeze_pretrained,
             '1_task': args.task,
             '1_n_samples': args.n_samples,
-            # '2_val_acc': best_val_acc,
-            # '2_best_epoch': best_epoch,
             '3_max_epochs': args.max_epochs,
             '3_backbone': args.backbone,
             '3_batch_size': args.batch_size,

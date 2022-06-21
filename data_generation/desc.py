@@ -1,7 +1,5 @@
 from data_generation.tasks import *
 
-
-
 TASKS=[
     # The images contain objects of the same shape.
     ['task_shape', task_shape],

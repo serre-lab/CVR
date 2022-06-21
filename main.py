@@ -4,15 +4,10 @@ import sys
 import argparse
 import copy
 
-# from typing import Union
-# from warnings import warn
 import numpy as np
 import pandas as pd
 
 import pytorch_lightning as pl
-# import torch
-# import torch.nn.functional as F
-# from torch import nn
 
 from pytorch_lightning.loggers.tensorboard import TensorBoardLogger
 from pytorch_lightning.callbacks import Callback
@@ -23,13 +18,6 @@ import modules
 import datasets
 
 from utils import parse_args, save_config, find_best_epoch, process_results
-
-## TODO work on finetuning code
-
-# def load_transfer_weights(model, model_type, checkpoint):
-#     model_temp = model_type.load_from_checkpoint(checkpoint)
-#     model.load_finetune_weights(model_temp)
-#     del model_temp
 
 class MetricsCallback(Callback):
     """PyTorch Lightning metric callback."""
@@ -119,7 +107,6 @@ def cli_main():
         ckpt = os.path.join(args.exp_dir, ckpt)
             
         print('resuming from checkpoint', ckpt)
-        # args.__dict__.update({'resume_from_checkpoint': latest_ckpt})
         fit_kwargs['ckpt_path'] = ckpt
 
     else:
@@ -147,11 +134,6 @@ def cli_main():
 
     if args.freeze_pretrained == 1:
         model.freeze_pretrained()
-
-    # if args.resume_training:
-    #     latest_ckpt = find_best_epoch(args.exp_dir, 0)
-    #     print('resuming from checkpoint', latest_ckpt)
-    #     args.__dict__.update({'resume_from_checkpoint': latest_ckpt})
         
     # training
     logger = TensorBoardLogger(args.exp_dir, default_hp_metric=False)
@@ -165,14 +147,10 @@ def cli_main():
     callbacks.append(metrics_callback)
 
     trainer = pl.Trainer.from_argparse_args(args, logger=logger, callbacks=callbacks)
-    
-    # logger.log_hyperparams(model.hparams, metrics={'hp/'+k : v for k, v in model_type._hp_log_metrics.items()})
 
     trainer.fit(model, datamodule, **fit_kwargs)
 
-    # testing
-    # best_ckpt = model_checkpoint.best_model_path if model_checkpoint.best_model_path!="" else model_checkpoint.last_model_path
-    
+    # testing    
     best_model = model if model_checkpoint.best_model_path == "" else model_type.load_from_checkpoint(checkpoint_path=model_checkpoint.best_model_path)
     
     trainer.test(model=best_model, datamodule=datamodule)
@@ -217,8 +195,6 @@ def cli_main():
     
     results_save_path = os.path.join(args.exp_dir, 'results.npy')
     np.save(results_save_path, {'global_avg': global_avg, 'per_task_avg': per_task_avg, 'per_task': per_task, 'metrics': metrics})
-    # hparams_dict = {'hp_'+k:v for k,v in best_model.hparams.items()}
-    # output_dict.update(hparams_dict)
 
     df = df.append(output_dict, ignore_index=True)
     df.to_csv(os.path.join(args.path_db, args.exp_name + '_db.csv'))
