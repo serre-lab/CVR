@@ -5,15 +5,15 @@ Here, we provide the results of behavioral experiments conducted to provide a hu
 
 The csv file contains the results of each block peformed by the participants. The columns of the csv file correspond to:
 
-worker_id: a participant identifier (modified to anonymize participants).
-age: the participant's age.
-sex: the participant's sex.
-task_idx: the index of the task.
-task_name: the name of the task. It corresponds to the function used to generate the problem samples.
-accuracy: the proportion of correct responses.
-confidence_min: the minimum confidence value reported by the participant from 0 to 100. 
-confidence_max: the maximum confidence value reported by the participant from 0 to 100.
-confidence_average: the average confidence value.
-rt_avg: the average reaction time.
-task_description: the task description provided by participants.
+- worker_id: a participant identifier (modified to anonymize participants).
+- age: the participant's age.
+- sex: the participant's sex.
+- task_idx: the index of the task.
+- task_name: the name of the task. It corresponds to the function used to generate the problem samples.
+- accuracy: the proportion of correct responses.
+- confidence_min: the minimum confidence value reported by the participant from 0 to 100. 
+- confidence_max: the maximum confidence value reported by the participant from 0 to 100.
+- confidence_average: the average confidence value.
+- rt_avg: the average reaction time.
+- task_description: the task description provided by participants.
 
