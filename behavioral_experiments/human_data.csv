@@ -1,0 +1,129 @@
+,worker_id,age,sex,task_idx,task_name,accuracy,confidence_min,confidence_max,confidence_average,rt_avg,task_description
+0,0,24,Female,0,task_shape,0.95,94,100,99.7,2018.45,"Different Shape, the other 3 were all the same shape, just different size/placement in the box"
+1,0,24,Female,1,task_pos,1.0,93,100,99.65,2451.2,"Different location, one option's shape was in a different location in the box than the other three"
+2,0,24,Female,49,task_pos_shape_1,0.8,31,79,62.95,6886.05,Orientation of the two shapes in relation to one another
+3,0,24,Female,20,task_shape_contact_2,1.0,33,87,74.05,4249.9,"Shape and Orientation of the two touching shapes in one box. In 3 of the boxes, the two shapes touching are the same shape, size and orientation. The odd one out has two different shapes touching"
+4,0,24,Female,70,task_rot_color,0.9,18,83,66.95,7676.7,"Except for the odd one out, in a box each shape should coordinate with a specific color"
+5,0,24,Female,47,task_pos_size_1,0.95,27,83,68.65,4920.85,Orientation of little shape vs big shape in the box
+12,1,33,Male,0,task_shape,1.0,78,100,91.85,1906.55,"they are the same shape, although they may vary in size or color"
+13,1,33,Male,5,task_flip,1.0,98,100,99.25,1831.3,"the same shape, though it might be a different size, color, or orientation"
+14,1,33,Male,95,task_shape_flip_1,0.9,67,90,82.8,4747.7,"three of the options have the same two shapes repeated and one of a different shape, the wrong option doesnt have the right pair of shapes"
+15,1,33,Male,86,task_shape_rot_1,1.0,54,87,77.05,5070.6,"two of the shape A, one of shape B. can be arranged differently"
+16,1,33,Male,79,task_inside_contact,1.0,67,90,84.15,3077.15,"there are pairs of shape, some with another shape inside them. each round the rule is either that the pairs are mixed (one with shape and one without) or not mixed (ones with shape inside are paired and ones without are paired)"
+17,1,33,Male,97,task_size_flip_1,0.95,6,36,26.8,4794.3,each box has three of the same shape in different sizes - the first and second are a mirror of each other
+18,2,45,Female,6,task_count,1.0,89,100,94.45,2291.65,One image had more or less of the figures drawn inside of it.  The other three had the same amount.
+19,2,45,Female,8,task_contact,1.0,91,100,97.65,1684.05,One had figures that were drawn apart. The other three had figures that were connected.
+20,2,45,Female,61,task_size_count_1,0.55,3,96,47.15,8140.2,"Three had the same number of large, medium, and small shapes.  The other one had a different number of small, medium, and large shapes."
+21,2,45,Female,80,task_contact_count_1,1.0,83,98,93.25,8367.2,Three had groups of figures with the same amount of figures grouped together.  The other one had different amounts of the groups.
+22,2,45,Female,76,task_color_contact,0.85,83,95,91.95,5850.2,Three had colors coordinated.  The other one had different color coordination.
+23,2,45,Female,66,task_shape_inside,0.95,90,99,94.1,3358.7,Three were drawn in the same shape.  The other one was a different shape.
+30,3,33,Male,4,task_rot,0.85,22,100,91.4,5195.6,Its based on shape
+31,3,33,Male,7,task_inside,1.0,100,100,100.0,2180.5,The little circles inside the bigger one.
+32,3,33,Male,72,task_rot_inside_3,0.5,62,100,84.95,10864.85,The mini inside matches the big shape
+33,3,33,Male,73,task_rot_count_1,0.25,42,100,71.35,5972.25,It has to do with the way the shapes are oriented together.
+34,3,33,Male,55,task_pos_contact,0.25,55,92,72.3,5829.9,The shape of the two connected islands needs to match the others.
+35,3,33,Male,93,task_flip_inside_3,0.8,42,100,88.75,7285.75,The drawing inside must match the drawing outside.
+36,4,21,Male,0,task_shape,1.0,99,100,99.95,2337.45,three of the same shape in different sizes
+37,4,21,Male,1,task_pos,1.0,61,100,98.05,3995.25,three shapes are in the same location and one is different
+38,4,21,Male,49,task_pos_shape_1,0.75,1,93,46.3,13747.5,"the height order of the shapes remain the same except for one
+"
+39,4,21,Male,20,task_shape_contact_2,1.0,41,100,94.7,5001.15,two duplicates are paired together expect for one box
+40,4,21,Male,70,task_rot_color,0.9,35,100,89.45,7411.5,"same color should equal same shape except for one box
+"
+41,4,21,Male,47,task_pos_size_1,0.9,15,100,73.0,7689.95,the shapes follow the same size order either bottom to top or left to right except for one
+42,5,24,Female,0,task_shape,0.95,99,100,99.9,2162.6,matching shape
+43,5,24,Female,3,task_color,1.0,99,100,99.95,1096.2,matching color
+44,5,24,Female,56,task_size_shape_1,0.3,2,91,46.05,7747.4,no idea
+45,5,24,Female,63,task_shape_color,1.0,50,100,96.0,3000.15,same shape with same color
+46,5,24,Female,51,task_pos_rot_1,1.0,75,100,97.95,4514.55,shapes facing same way
+47,5,24,Female,17,task_inside_count_1,0.95,97,100,99.8,3331.2,same number of shapes inside shape
+48,6,39,Female,0,task_shape,0.85,14,100,76.55,3015.4,"3 images were the same, even if different in size.  one was different "
+49,6,39,Female,3,task_color,0.95,23,99,87.0,2098.9,the different colored one was the odd one out
+50,6,39,Female,63,task_shape_color,0.5,8,97,45.25,5250.75,the reversed colors were the odd one out
+51,6,39,Female,56,task_size_shape_1,0.55,7,72,33.45,7658.9,I am not sure
+52,6,39,Female,17,task_inside_count_1,0.95,15,91,64.45,5345.75,the different number of enclosed spots was out
+53,6,39,Female,51,task_pos_rot_1,0.85,19,84,61.85,6020.6,one of the shapes were slightly different than the others
+60,7,19,Female,1,task_pos,0.95,88,100,98.3,2922.2,The location of three of the objects is the same--the outlier is somewhere different.
+61,7,19,Female,6,task_count,1.0,100,100,100.0,2117.0,The amount of shapes in three of the boxes are the same but the outlier either has more or less shapes.
+62,7,19,Female,24,task_pos_inside_3,0.35,1,35,11.85,10456.3,I don't know??? Something about the amongus shapes?
+63,7,19,Female,13,task_pos_count_2,0.7,3,94,58.4,10677.4,"If the most matching are high, the odd is the lowest, if the most matching are low, the odd is the highest, else 9?"
+64,7,19,Female,68,task_shape_count_1,0.95,74,100,96.25,11414.4,"There are multiple groups of shapes, in various numbers. The odd one out has a different number in each of the groups."
+65,7,19,Female,101,task_flip_contact_1,0.8,81,100,96.1,5731.8,"The two shapes touching must be the same shape, they can have different sizes but topologically they must have the same shape."
+66,8,25,Female,3,task_color,1.0,94,100,99.7,1444.3,different color than the other shapes
+67,8,25,Female,5,task_flip,0.95,77,100,92.75,3009.95,different shape than the others
+68,8,25,Female,94,task_flip_color_1,0.85,33,99,74.1,13563.55,one shape is different from the other shapes of the same color
+69,8,25,Female,53,task_pos_col_1,0.85,29,98,72.4,11239.4,The same color shapes are on the opposite side of the square compared to the three other squares
+70,8,25,Female,60,task_size_contact,0.5,15,68,36.85,11784.75,i do not know the rule.
+71,8,25,Female,96,task_rot_flip_1,0.6,25,75,51.95,35509.5,the shapes are not rotated the same way as the other squares
+72,9,33,Male,4,task_rot,1.0,29,100,79.55,3309.2,the shape of the shape
+73,9,33,Male,7,task_inside,1.0,92,100,98.85,2082.8,location of the 2 shapes
+74,9,33,Male,73,task_rot_count_1,0.65,3,88,47.75,13610.35,the amount of different shapes
+75,9,33,Male,72,task_rot_inside_3,0.75,3,88,53.55,8341.45,the difference between the outer and inner shape
+76,9,33,Male,93,task_flip_inside_3,0.6,0,70,23.35,10923.2,The difference between the outer and inner shape
+77,9,33,Male,55,task_pos_contact,0.8,0,99,64.95,4270.7,the location of the connection of the shapes
+78,10,24,Female,3,task_color,1.0,99,100,99.95,817.85,The colors are different.
+79,10,24,Female,5,task_flip,0.9,67,100,93.9,1828.45,"The colors are the same, but one shape is slightly different. "
+80,10,24,Female,53,task_pos_col_1,0.3,12,92,53.25,6948.0,I was unable to determine the rule. 
+81,10,24,Female,94,task_flip_color_1,0.05,16,55,32.35,4393.9,The shapes were oriented at a different location . 
+82,10,24,Female,96,task_rot_flip_1,0.7,21,94,57.85,5364.85,Chose the pair of shapes that arent symmetrical. 
+83,10,24,Female,60,task_size_contact,0.7,32,74,55.5,5035.9,Pick the group that has a pair to be out of proportion. 
+84,11,31,Female,6,task_count,1.0,91,100,99.55,1990.3,The boxes all have the same number of shapes in them. The odd one out has a different number of shapes than the other 3.
+85,11,31,Female,8,task_contact,0.95,68,100,98.2,1695.8,The shapes needed to be touching each other. The odd one out had shapes that were not touching.
+86,11,31,Female,80,task_contact_count_1,1.0,90,100,97.45,9068.5,"The boxes had to have the same grouping of shapes. For example, if there were 3 boxes that had 2 groups of three and 1 group of two, and another box with 1 group of three and 2 groups of two, that last box would be the odd one because it didn't have the same number of groups with the same number of shapes in the group"
+87,11,31,Female,61,task_size_count_1,0.9,46,100,87.6,10962.8,"The squares had to have the same number of shapes of the same sizes. For example, if 3 squares had 2 large shapes and 1 small shape in them, and the 4th square had 1 large shape and 2 small shapes, the 4th square would be the odd one out"
+88,11,31,Female,66,task_shape_inside,0.95,57,100,94.6,3447.8,The outer shape needed to be the same
+89,11,31,Female,76,task_color_contact,1.0,58,100,91.55,10042.75,"I am having a hard time finding the words to describe this one. I understand the pattern but can't properly explain it (I am autistic and have difficulty getting thoughts from my brain into words). This is the best I can do: each square had 2 groups of shapes in it. The shapes in a group were either the same color, or two different colors. The rule was, if both shapes in one group in a square were the same color, and both shapes in the other group in a square were two different colors, then all the other squares needed to have that same pattern (the shapes in one group the same color, and the shapes in the other group 2 different colors). The colors did not matter though, the first square could have 2 blue shapes, 1 green shape, and one red shape, and the next square have 2 yellow shapes, one blue shape, and one red shape, and that would be fine. It just matters if the shapes within each group were either the same or different."
+90,12,41,Male,3,task_color,1.0,94,100,99.5,1528.55,The odd man out is a different color than the other three
+91,12,41,Male,7,task_inside,1.0,59,100,97.05,1702.6,"The odd man out has the small shape outside the big shape, the other three have the small shape inside the big shape"
+92,12,41,Male,74,task_color_inside_1,1.0,59,100,95.3,4015.0,"The odd man's large shape is the same color as the other three's small shape, and its small shape is the color of their large shape."
+93,12,41,Male,77,task_color_count_1,0.9,48,100,78.15,32213.15,The three same ones are split into groups of the same number of one color. The odd one will have a group with a different number. And I think maybe the three common ones have the same number of one color.
+94,12,41,Male,99,task_pos_flip_1,0.95,62,100,94.15,6720.75,"The three like groups have all three of their shapes oriented the same way, the odd man out has at least one of its shapes oriented differently."
+95,12,41,Male,59,task_size_inside_1,0.7,47,100,75.45,17899.3,"In the three common ones, the smallest shape is inside the larges. In the odd man out the smallest shape is inside the second-smallest shape."
+102,13,29,Male,2,task_size,1.0,30,79,65.0,2431.95,disproportional object is always the odd one out.
+103,13,29,Male,4,task_rot,0.9,22,78,61.5,9364.5,One shape/choice is unlike the others.
+104,13,29,Male,58,task_size_rot_2,0.4,24,79,54.15,42145.0,One of the trio is disproportionately sized compared to the other choices.
+105,13,29,Male,82,task_size_color_1,0.6,22,72,33.4,31623.25,Positioning is the main factor for this block.
+106,13,29,Male,91,task_flip_count_1,0.7,22,72,44.65,36565.55,One extra or one less is included in the bunch.
+107,13,29,Male,88,task_rot_contact_1,0.3,24,46,35.45,22053.75,Many of my choices were incorrect for this particular trial. That I feel I am unqualified to prescribe a rule.
+108,14,20,Female,7,task_inside,1.0,81,100,97.85,1308.65,"The odd one out is when one of the shapes was not inside the other one, rather they were separate shapes that did not intersect or surround another"
+109,14,20,Female,3,task_color,1.0,87,100,99.35,840.3,The outlier was the one shape that was a different color compared to the other 3.
+110,14,20,Female,99,task_pos_flip_1,0.95,87,100,96.2,4476.3,"The outlier was the image where the shapes were configurated differently than the others, usually rotated a different direction on the x or y axis"
+111,14,20,Female,59,task_size_inside_1,0.95,51,100,84.4,3576.95,"The outlier was when the largest shape was  not surrounding the smallest shape, but was separated."
+112,14,20,Female,74,task_color_inside_1,0.95,64,100,97.8,1542.8,The outlier is the image which had the inverse shape colors compared to the other 3
+113,14,20,Female,77,task_color_count_1,0.75,23,95,63.6,6787.8,The outlier had a differnt ratio of certain colors than the other images
+120,15,49,Female,0,task_shape,1.0,99,100,99.95,2760.75,All the objects were the same shape except one in each trial.
+121,15,49,Female,3,task_color,1.0,99,100,99.95,1637.85,All the objects in each trial were the same color except the odd one.
+122,15,49,Female,63,task_shape_color,0.7,0,100,70.05,28564.0,"The color patterns for the objects in each trial were the same, but switched in the odd set."
+123,15,49,Female,56,task_size_shape_1,0.85,49,100,96.85,17891.5,"The like objects in each group were the same size except, but in the odd group, the size of the similar objects were different. "
+124,15,49,Female,17,task_inside_count_1,0.9,0,100,91.65,16784.25,"The objects in each set had the same number of objects inside them, except the odd set"
+125,15,49,Female,51,task_pos_rot_1,1.0,97,100,99.5,4825.6,The pattern of the objects in each set was the same except in the odd one.
+132,16,27,Female,3,task_color,1.0,100,100,100.0,1831.3,Its a different color than the rest
+133,16,27,Female,0,task_shape,1.0,100,100,100.0,2395.65,it was a different shape than the rest
+134,16,27,Female,17,task_inside_count_1,0.85,35,100,93.8,14668.4,the odd on out had a different number of shapes with a shape inside of it
+135,16,27,Female,51,task_pos_rot_1,1.0,58,100,97.05,5115.85,the shapes are rotated differently in the odd one out
+136,16,27,Female,63,task_shape_color,1.0,100,100,100.0,3493.45,the colors of the shapes are swapped in the odd one out
+137,16,27,Female,56,task_size_shape_1,0.8,31,100,88.9,21472.1,"the matching shapes were either all the same size or different sizes; so if the three uniform ones all had each shape the same size as their respective pair, the odd one out had a different size to their respected pair and vice versa. "
+138,17,35,Male,7,task_inside,1.0,87,95,91.05,2373.1,"The shapes all contain another shape inside, except the outlier."
+139,17,35,Male,3,task_color,1.0,72,96,90.6,1218.4,The outlier shape was in a different color than the others.
+140,17,35,Male,59,task_size_inside_1,1.0,52,94,86.4,3448.7,"The outlier contained a shape (without something inside) that was bigger than the other shape, all other images did not."
+141,17,35,Male,99,task_pos_flip_1,0.25,40,58,49.8,8564.0,I think the rule was the shape was flipped as a mirror image and then flipped upside down.
+142,17,35,Male,77,task_color_count_1,0.9,40,78,59.45,16742.4,The outlier image had an extra number of one color of shape.
+143,17,35,Male,74,task_color_inside_1,0.95,47,93,82.65,2503.8,The outlier image had an inner shape that was different than the other three.
+150,18,49,Male,1,task_pos,0.95,6,100,94.05,2584.95,Same position in the box
+151,18,49,Male,0,task_shape,1.0,97,100,99.05,2584.35,Same shape
+152,18,49,Male,70,task_rot_color,0.95,33,100,85.55,10021.4,same shapes are same color
+153,18,49,Male,47,task_pos_size_1,0.75,52,99,85.75,7176.7,small shapes lower same direction in box
+154,18,49,Male,49,task_pos_shape_1,0.8,44,99,83.5,6049.9,same shape in same side of box
+155,18,49,Male,20,task_shape_contact_2,0.85,55,99,90.9,5402.3,same shapes grouped together
+156,19,37,Female,1,task_pos,1.0,66,100,90.2,3567.2,the positioning of where the image is within the square. 
+157,19,37,Female,0,task_shape,0.95,55,100,97.25,3774.5,The shape of the images.
+158,19,37,Female,47,task_pos_size_1,0.3,45,64,54.65,12340.85,It's something about the shapes being similar although different sizes. 
+159,19,37,Female,70,task_rot_color,0.85,49,100,87.1,17109.9,The different colored shapes have to be the same shape as each other. 
+160,19,37,Female,20,task_shape_contact_2,0.4,48,80,60.3,11783.45,Same or similar features and spacing between them.
+161,19,37,Female,49,task_pos_shape_1,0.25,50,92,65.65,8974.05,Either a different shape or a more pixilated image. 
+162,20,22,Female,3,task_color,1.0,98,100,99.85,1160.9,the color
+163,20,22,Female,7,task_inside,1.0,98,100,99.7,1614.0,the circle out side the shape 
+164,20,22,Female,77,task_color_count_1,0.65,2,80,27.05,6269.75,different number of colored shapes
+165,20,22,Female,74,task_color_inside_1,0.95,31,99,83.45,2456.0,different colored outside ring
+166,20,22,Female,59,task_size_inside_1,1.0,25,100,92.1,2550.1,the circle was in the smaller of the two shapes
+167,20,22,Female,99,task_pos_flip_1,0.9,18,99,84.0,4668.05,the shapes were facing a different way
