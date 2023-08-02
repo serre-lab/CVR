@@ -210,6 +210,7 @@ if __name__ == '__main__':
             generate_dataset(tn, tfn, tfn_g, args.data_dir, args.image_size, args.seed, args.train_size, args.val_size, args.test_size, args.test_gen_size)
 
     else:
+        task_idx = int(task_idx)
         tn, tfn, _ = TASKS[task_idx]
         _, tfn_g, _ = TASKS_GEN[task_idx]
         generate_dataset(tn, tfn, tfn_g, args.data_dir, args.image_size, args.seed, args.train_size, args.val_size, args.test_size, args.test_gen_size)
